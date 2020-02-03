@@ -11,6 +11,15 @@ const emailValidation = /^[a-z][-.\w]*@[a-z0-9][-.\a-z0-9]*\.[a-z]+$/i;
 const otherTitle = document.getElementById("other-title");
 const otherTitleValidation = /^[a-z][-.a-z]*( [a-z][-.a-z]*)*$/i;
 
+const creditCardNumber = document.getElementById("cc-num");
+const creditCardValidation = /[0-9]{13,16}/;
+
+const zipNumber = document.getElementById("zip");
+const zipValidation = /[0-9]{5}/;
+
+const cvvNumber = document.getElementById("cvv");
+const cvvValidation = /[0-9]{3}/;
+
 /* * *
  * Autofocus Name Field
  * * */
@@ -112,17 +121,18 @@ document.querySelector(".activities").addEventListener("change", e => {
 });
 
 const payment = document.getElementById("payment");
-document.getElementById("credit-card").style.display = "none";
-document.getElementById("paypal").style.display = "none";
-document.getElementById("bitcoin").style.display = "none";
+const paymentOptions = document.querySelectorAll("#payment ~ div");
+for (let i = 0; i < paymentOptions.length; i++) {
+  paymentOptions[i].style.display = "none";
+}
 
 payment.addEventListener("change", e => {
-  for (let i = 1; i < paymentOption.length; i++) {
-    console.log(e.target.value + " " + paymentOption[i].value);
-    if (e.target.value === paymentOption[i].value) {
-      paymentOption[i].style.display = "block";
+  for (let i = 0; i < paymentOptions.length; i++) {
+    // console.log(e.target.value + " " + paymentOptions[i].className);
+    if (e.target.value === paymentOptions[i].className) {
+      paymentOptions[i].style.display = "block";
     } else {
-      paymentOption[i].style.display = "none";
+      paymentOptions[i].style.display = "none";
     }
   }
 });
@@ -137,6 +147,9 @@ form.addEventListener("submit", e => {
   e.preventDefault();
   testFields(nameValidation, nameField);
   testFields(emailValidation, emailField);
+  testFields(creditCardValidation, creditCardNumber);
+  testFields(zipValidation, zipNumber);
+  testFields(cvvValidation, cvvNumber);
   if (titleMenu.value === "Select Your Job Role") {
     titleMenu.style.borderColor = "red";
   } else {
@@ -169,6 +182,12 @@ form.addEventListener("submit", e => {
     legend.style.color = "red";
   } else {
     legend.style.color = "black";
+  }
+
+  if (payment.value === "select method") {
+    payment.style.borderColor = "red";
+  } else {
+    payment.style.borderColor = "";
   }
 });
 

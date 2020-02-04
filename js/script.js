@@ -27,7 +27,7 @@ const cvvValidation = /[0-9]{3}/;
 nameField.setAttribute("autofocus", true);
 
 /* * *
- * Pop Up Job Menu -- Will show input box when "Other" selected from menu
+ * Job Menu
  * * */
 
 const titleMenu = document.getElementById("title");
@@ -50,8 +50,12 @@ function otherSelection() {
   }
 }
 
+/* * *
+ * T-Shrit Menu
+ * * */
+
 const tShirtMenu = document.getElementById("colors-js-puns");
-tShirtMenu.style.display = "none"; // hide t-shirt color menu on start
+tShirtMenu.style.display = "none"; // hide t-shirt color menu on load
 
 const tShirtDesign = document.getElementById("design");
 
@@ -81,29 +85,33 @@ tshirtFirstChild.setAttribute("hidden", false);
 
 const tShirtColor = document.getElementById("color");
 
-// const tShirtColorName = document.createElement("option");
-// tShirtColorName.textContent = "Select Your T-Shirt";
-// tShirtColorName.setAttribute("disabled", true);
-// tShirtColorName.setAttribute("selected", true);
-// tShirtColorName.setAttribute("hidden", false);
-// tShirtColor.prepend(tShirtColorName);
-
-// console.log(tShirtColorName);
-
 const tshirtOptions = document.querySelectorAll("#color option");
+
+/* * *
+ * Setup Total Charge for Activities
+ * * */
+
+const activities = document.querySelector(".activities");
+const totalDisplay = document.createElement("h3");
+totalDisplay.textContent = "Your Current Total: $0";
+totalDisplay.className = "yourTotal";
+activities.appendChild(totalDisplay);
 
 /* * *
  * Checkbox Listener
  * * */
 
 const checkboxes = document.querySelectorAll(".activities input");
+console.log(checkboxes);
 
 document.querySelector(".activities").addEventListener("change", e => {
+  let total = 0;
   const clicked = e.target.checked;
   const clickedType = e.target.getAttribute("data-day-and-time");
 
+  // Check to makes sure conflicting activites are greyed out
+  // and total of activies is calculated.
   for (let i = 0; i < checkboxes.length; i++) {
-    // 4
     let checkboxType = checkboxes[i].getAttribute("data-day-and-time"); //5
     if (checkboxType === clickedType && clicked !== checkboxes[i].checked) {
       checkboxes[i].disabled = true;
@@ -117,8 +125,17 @@ document.querySelector(".activities").addEventListener("change", e => {
       let a = checkboxes[i].parentNode;
       a.style.color = "black";
     }
+    if (checkboxes[i].checked === true) {
+      total += parseInt(checkboxes[i].getAttribute("data-cost"));
+    }
   }
+  const totalLine = document.querySelector(".yourTotal");
+  totalLine.textContent = "Your Current Total: $" + total;
 });
+
+/* * *
+ * Payment Menu
+ * * */
 
 const payment = document.getElementById("payment");
 const paymentOptions = document.querySelectorAll("#payment ~ div");
@@ -128,7 +145,6 @@ for (let i = 0; i < paymentOptions.length; i++) {
 
 payment.addEventListener("change", e => {
   for (let i = 0; i < paymentOptions.length; i++) {
-    // console.log(e.target.value + " " + paymentOptions[i].className);
     if (e.target.value === paymentOptions[i].className) {
       paymentOptions[i].style.display = "block";
     } else {
@@ -138,7 +154,7 @@ payment.addEventListener("change", e => {
 });
 
 /* * *
- * Event Listener for form validation
+ * Event Listener for Form Validation
  * * */
 
 const form = document.querySelector("form");
@@ -158,9 +174,6 @@ form.addEventListener("submit", e => {
   if (titleMenu.value === "other") {
     testFields(otherTitleValidation, otherTitle);
   }
-  // if (titleMenu.value === "Select Your Job Role") {
-  //   titleMenu.style.color = "red";
-  // }
 
   // t-shirt checker
   console.log(tShirtDesign.style.color);
@@ -191,6 +204,7 @@ form.addEventListener("submit", e => {
   }
 });
 
+// Text field Regex checker
 function testFields(regex, element) {
   if (!regex.test(element.value)) {
     element.style.backgroundColor = "pink";

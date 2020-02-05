@@ -1,9 +1,22 @@
 /* * *
+ * Set autofocus on first text field on load
+ * * */
+
+window.onload = () => document.getElementById("name").focus();
+
+/* * *
  * Regex Validation
  * * */
 
 const nameField = document.getElementById("name");
-const nameValidation = /^[a-z][-.a-z]*( [a-z][-.a-z]*)*$/i;
+const nameValidation = /^[A-Z][-.A-Za-z]*( [A-Z][-.A-Za-z]*)*$/;
+
+// const nameErrorElement = document.createElement("p");
+// nameErrorElement.style.color = "red";
+// nameError = "dddd";
+// nameErrorElement.appendChild(nameField);
+// console.log(nameErrorElement);
+// nameField.appendChild(nameErrorElement);
 
 const emailField = document.getElementById("mail");
 const emailValidation = /^[a-z][-.\w]*@[a-z0-9][-.\a-z0-9]*\.[a-z]+$/i;
@@ -12,19 +25,13 @@ const otherTitle = document.getElementById("other-title");
 const otherTitleValidation = /^[a-z][-.a-z]*( [a-z][-.a-z]*)*$/i;
 
 const creditCardNumber = document.getElementById("cc-num");
-const creditCardValidation = /[0-9]{13,16}/;
+const creditCardValidation = /^[0-9]{13,16}$/;
 
 const zipNumber = document.getElementById("zip");
-const zipValidation = /[0-9]{5}/;
+const zipValidation = /^[0-9]{5}$/;
 
 const cvvNumber = document.getElementById("cvv");
-const cvvValidation = /[0-9]{3}/;
-
-/* * *
- * Autofocus Name Field
- * * */
-
-nameField.setAttribute("autofocus", true);
+const cvvValidation = /^[0-9]{3}$/;
 
 /* * *
  * Job Menu
@@ -102,7 +109,6 @@ activities.appendChild(totalDisplay);
  * * */
 
 const checkboxes = document.querySelectorAll(".activities input");
-console.log(checkboxes);
 
 document.querySelector(".activities").addEventListener("change", e => {
   let total = 0;
@@ -110,7 +116,7 @@ document.querySelector(".activities").addEventListener("change", e => {
   const clickedType = e.target.getAttribute("data-day-and-time");
 
   // Check to makes sure conflicting activites are greyed out
-  // and total of activies is calculated.
+  // and total cost of activies is calculated.
   for (let i = 0; i < checkboxes.length; i++) {
     let checkboxType = checkboxes[i].getAttribute("data-day-and-time"); //5
     if (checkboxType === clickedType && clicked !== checkboxes[i].checked) {
@@ -138,8 +144,11 @@ document.querySelector(".activities").addEventListener("change", e => {
  * * */
 
 const payment = document.getElementById("payment");
+const creditCard = document.querySelector("[value='credit-card']");
+creditCard.setAttribute("selected", "selected");
+
 const paymentOptions = document.querySelectorAll("#payment ~ div");
-for (let i = 0; i < paymentOptions.length; i++) {
+for (let i = 1; i < paymentOptions.length; i++) {
   paymentOptions[i].style.display = "none";
 }
 
@@ -159,8 +168,13 @@ payment.addEventListener("change", e => {
 
 const form = document.querySelector("form");
 
+nameField.addEventListener("blur", e => {
+  testFields(nameValidation, nameField);
+  if ((e.target.style.color = "pink")) {
+  }
+});
+
 form.addEventListener("submit", e => {
-  e.preventDefault();
   testFields(nameValidation, nameField);
   testFields(emailValidation, emailField);
   testFields(creditCardValidation, creditCardNumber);
@@ -176,7 +190,6 @@ form.addEventListener("submit", e => {
   }
 
   // t-shirt checker
-  console.log(tShirtDesign.style.color);
   if (tShirtDesign.value === "Select Theme") {
     tShirtDesign.style.borderColor = "red";
   } else {
@@ -202,6 +215,7 @@ form.addEventListener("submit", e => {
   } else {
     payment.style.borderColor = "";
   }
+  e.preventDefault();
 });
 
 // Text field Regex checker

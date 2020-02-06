@@ -11,13 +11,6 @@ window.onload = () => document.getElementById("name").focus();
 const nameField = document.getElementById("name");
 const nameValidation = /^[A-Z][-.A-Za-z]*( [A-Z][-.A-Za-z]*)*$/;
 
-// const nameErrorElement = document.createElement("p");
-// nameErrorElement.style.color = "red";
-// nameError = "dddd";
-// nameErrorElement.appendChild(nameField);
-// console.log(nameErrorElement);
-// nameField.appendChild(nameErrorElement);
-
 const emailField = document.getElementById("mail");
 const emailValidation = /^[a-z][-.\w]*@[a-z0-9][-.\a-z0-9]*\.[a-z]+$/i;
 
@@ -136,7 +129,7 @@ document.querySelector(".activities").addEventListener("change", e => {
     }
   }
   const totalLine = document.querySelector(".yourTotal");
-  totalLine.textContent = "Your Current Total: $" + total;
+  totalLine.textContent = "Your Total: $" + total;
 });
 
 /* * *
@@ -168,30 +161,24 @@ payment.addEventListener("change", e => {
 
 const form = document.querySelector("form");
 
-nameField.addEventListener("blur", e => {
-  testFields(nameValidation, nameField);
-  if ((e.target.style.color = "pink")) {
-  }
-});
-
 form.addEventListener("submit", e => {
-  testFields(nameValidation, nameField);
-  testFields(emailValidation, emailField);
-  testFields(creditCardValidation, creditCardNumber);
-  testFields(zipValidation, zipNumber);
-  testFields(cvvValidation, cvvNumber);
+  let counter = 0;
+  counter += testFields(nameValidation, nameField);
+  counter += testFields(emailValidation, emailField);
   if (titleMenu.value === "Select Your Job Role") {
     titleMenu.style.borderColor = "red";
+    counter += 1;
   } else {
     titleMenu.style.borderColor = "";
   }
   if (titleMenu.value === "other") {
-    testFields(otherTitleValidation, otherTitle);
+    counter += testFields(otherTitleValidation, otherTitle);
   }
 
   // t-shirt checker
   if (tShirtDesign.value === "Select Theme") {
     tShirtDesign.style.borderColor = "red";
+    counter += 1;
   } else {
     tShirtDesign.style.borderColor = "";
   }
@@ -206,23 +193,38 @@ form.addEventListener("submit", e => {
   const legend = document.querySelector(".activities legend");
   if (count === 0) {
     legend.style.color = "red";
+    counter += 1;
   } else {
     legend.style.color = "black";
   }
 
   if (payment.value === "select method") {
     payment.style.borderColor = "red";
+    counter += 1;
   } else {
     payment.style.borderColor = "";
   }
-  e.preventDefault();
+
+  if (payment.value === "credit-card") {
+    counter += testFields(creditCardValidation, creditCardNumber);
+    counter += testFields(zipValidation, zipNumber);
+    counter += testFields(cvvValidation, cvvNumber);
+  }
+
+  // if counter > 0 then at least one field has not validated
+  // and e.prevendDeault() will be triggered
+  if (counter > 0) {
+    e.preventDefault();
+  }
 });
 
 // Text field Regex checker
 function testFields(regex, element) {
   if (!regex.test(element.value)) {
     element.style.backgroundColor = "pink";
+    return 1;
   } else {
     element.style.backgroundColor = "lightgreen";
+    return 0;
   }
 }
